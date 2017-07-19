@@ -49,13 +49,14 @@ public class CalculateSales {
 			System.out.println("予期せぬエラーが発生しました");
 			return;
 		} finally {
-			if (br != null)
+			if (br != null){
 				try {
 					br.close();
 				} catch (IOException e) {
 					System.out.println("予期せぬエラーが発生しました");
 					return;
 				}
+			}
 		}
 		try {
 			File file = new File(args[0], "commodity.lst");
@@ -102,9 +103,9 @@ public class CalculateSales {
 		ArrayList<Integer> numbersList = new ArrayList<Integer>();
 
 		for(int i = 0; i < pass.size() ; i++){
-		String[] number = pass.get(i).getName().split("\\.");
-		int numbers = Integer.parseInt(number[0]);
-		numbersList.add(numbers);
+			String[] number = pass.get(i).getName().split("\\.");
+			int numbers = Integer.parseInt(number[0]);
+			numbersList.add(numbers);
 		}
 		for(int i = 0; i < numbersList.size() - 1; i++){
 			int plus = numbersList.get(i + 1) - numbersList.get(i);
@@ -171,40 +172,38 @@ public class CalculateSales {
 		List<Map.Entry<String,Long>> entriesShopAgg = new ArrayList<Map.Entry<String,Long>>(mapSale.entrySet());
 		Collections.sort(entriesShopAgg, new Comparator<Map.Entry<String,Long>>() {
 			@Override
-			public int compare(
-			Entry<String,Long> entry1, Entry<String,Long> entry2) {
+			public int compare(Entry<String,Long> entry1, Entry<String,Long> entry2) {
 				return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
 			}
 		});
-			try{
-				File shopAgg = new File(args[0],"branch.out");
-				bw = new BufferedWriter(new FileWriter(shopAgg));
-				for (Entry<String,Long> s : entriesShopAgg) {
-					bw.write(s.getKey() + "," + mapBranch.get(s.getKey()) + "," + (s.getValue()));
-					bw.newLine();
-				}
-				bw.close();
-			}catch(IOException e){
-				System.out.println("予期せぬエラーが発生しました");
-				return;
-			} finally {
-				if (bw != null) {
-					try {
-						bw.close();
-					} catch (IOException e) {
-						System.out.println("予期せぬエラーが発生しました");
-						return;
-					}
+		try{
+			File shopAgg = new File(args[0],"branch.out");
+			bw = new BufferedWriter(new FileWriter(shopAgg));
+			for (Entry<String,Long> s : entriesShopAgg) {
+				bw.write(s.getKey() + "," + mapBranch.get(s.getKey()) + "," + (s.getValue()));
+				bw.newLine();
+			}
+			bw.close();
+		}catch(IOException e){
+			System.out.println("予期せぬエラーが発生しました");
+			return;
+		} finally {
+			if (bw != null) {
+				try {
+					bw.close();
+				} catch (IOException e) {
+					System.out.println("予期せぬエラーが発生しました");
+					return;
 				}
 			}
-			List<Map.Entry<String,Long>> entriesComAgg = new ArrayList<Map.Entry<String,Long>>(mapCommodityAggregate.entrySet());
-			Collections.sort(entriesComAgg, new Comparator<Map.Entry<String,Long>>() {
-				@Override
-				public int compare(
-				Entry<String,Long> entry1, Entry<String,Long> entry2) {
-					return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
-				}
-			});
+		}
+		List<Map.Entry<String,Long>> entriesComAgg = new ArrayList<Map.Entry<String,Long>>(mapCommodityAggregate.entrySet());
+		Collections.sort(entriesComAgg, new Comparator<Map.Entry<String,Long>>() {
+			@Override
+			public int compare(Entry<String,Long> entry1, Entry<String,Long> entry2) {
+				return ((Long)entry2.getValue()).compareTo((Long)entry1.getValue());
+			}
+		});
 		try{
 			File comAgg = new File(args[0],"commodity.out");
 			FileWriter fwCom = new FileWriter(comAgg);
